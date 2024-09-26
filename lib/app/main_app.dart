@@ -1,22 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gestor_horas_extras/navigation/navigations_routers_provider.dart';
 
-import '../navigation/router.dart';
+class MainApp extends ConsumerWidget {
 
-class MainApp extends StatefulWidget {
   const MainApp({
     super.key,
   });
 
   @override
-  State<StatefulWidget> createState() => _MainAppState();
-}
-
-class _MainAppState extends State<MainApp> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final navigationRouters = ref.watch(navigationRoutersProvider);
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      routerConfig: RouterNav().router,
+      routerConfig: navigationRouters,
       builder: (context, child) {
         child = MediaQuery(
           data: MediaQuery.of(context)
