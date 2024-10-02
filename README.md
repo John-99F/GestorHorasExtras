@@ -1,21 +1,13 @@
-<<<<<<< HEAD
 # gestor_horas_extras
 
-A new Flutter project.
+proyecto de gestion de horas extras
+
+# para la instalacion de riverpod se debe de ejecutar los siguientes comandos:
+>> flutter pub add flutter_riverpod
+>> flutter pub add riverpod_annotation
+>> flutter pub add dev:riverpod_generator
+>> flutter pub add dev:build_runner
+>> flutter pub add dev:custom_lint
+>> flutter pub add dev:riverpod_lint
 
 ## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-=======
-# GestorHorasExtras
-Proyecto de practicas de gestor de horas extras 
->>>>>>> cd1cf49ff7bc1dabd10494436acde04701151601
