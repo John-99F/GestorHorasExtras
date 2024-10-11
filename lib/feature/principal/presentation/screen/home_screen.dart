@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gestor_horas_extras/core/enum/home_button_enum.dart';
+import 'package:gestor_horas_extras/core/utils/platform_utils.dart';
 import 'package:gestor_horas_extras/core_ui/widgets/shared/custom_app_bar.dart';
 import 'package:gestor_horas_extras/core_ui/widgets/shared/widgets.dart';
 
@@ -35,7 +36,7 @@ class HomeScreen extends ConsumerWidget {
       child: Column(
         children: [
           const CustomAppBar(),
-          const SizedBox(height: 35),
+           SizedBox(height: PlatformUtils.isAndroid() ? 1.h : 35.h),
           _buildMainMenu(),
         ],
       ),
@@ -45,10 +46,10 @@ class HomeScreen extends ConsumerWidget {
   _buildMainMenu() {
     return Center(
       child: SizedBox(
-        height: 900.h,
+        height: PlatformUtils.isAndroid() ? 65.h : 900.h,
         child: ListView.builder(
           padding: EdgeInsets.only(left: 2.w),
-          scrollDirection: Axis.horizontal,
+          scrollDirection:PlatformUtils.isAndroid() ? Axis.vertical :  Axis.horizontal,
           itemCount: HomeButtonEnum.values.length,
           itemBuilder: (context, index) {
             return CustomCardButton(

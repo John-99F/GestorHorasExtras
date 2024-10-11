@@ -18,7 +18,7 @@ class CustomCardButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(50),
+      padding: EdgeInsets.all(PlatformUtils.isAndroid() ? 10 : 50,),
       child: Column(
         children: [
           _buildCard(),
@@ -41,8 +41,8 @@ class CustomCardButton extends StatelessWidget {
         ),
         child: Image.asset(
           homeButtonEnum.pathImage,
-          width: PlatformUtils.isAndroid() ? 100.w : 600.w,
-          height: PlatformUtils.isAndroid() ? 30.h : 500.h,
+          width: PlatformUtils.isAndroid() ? 80.w : 500.w,
+          height: PlatformUtils.isAndroid() ? 20.h : 500.h,
           fit: BoxFit.fill,
         ),
       ),
