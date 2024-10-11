@@ -1,4 +1,5 @@
 import 'package:gestor_horas_extras/feature/auth/login/presentation/screen/login_screen.dart';
+import 'package:gestor_horas_extras/feature/principal/presentation/screen/home_screen.dart';
 import 'package:gestor_horas_extras/navigation/nav_keys.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -17,6 +18,11 @@ GoRouter navigationRouters(NavigationRoutersRef ref) {
         name: LoginScreen.name,
         builder: (context, state) => const LoginScreen(),
       ),
+      GoRoute(
+        path: HomeScreen.link,
+        name: HomeScreen.name,
+        builder: (context, state) => const HomeScreen(),
+      )
     ],
   );
 }
