@@ -41,7 +41,7 @@ class CustomCardButton extends StatelessWidget {
         ),
         child: Image.asset(
           homeButtonEnum.pathImage,
-          width: PlatformUtils.isAndroid() ? 80.w : 500.w,
+          width: PlatformUtils.isAndroid() ? 100.w : 500.w,
           height: PlatformUtils.isAndroid() ? 20.h : 500.h,
           fit: BoxFit.fill,
         ),
