@@ -1,34 +1,29 @@
-
-
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gestor_horas_extras/core/utils/platform_utils.dart';
-import 'package:gestor_horas_extras/core_ui/widgets/custom_button.dart';
-import 'package:gestor_horas_extras/core_ui/widgets/custom_fields.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gestor_horas_extras/core_ui/colors/color_constants.dart';
+import 'package:gestor_horas_extras/core_ui/widgets/shared/widgets.dart';
+
+import 'package:gestor_horas_extras/feature/principal/presentation/screen/home_screen.dart';
+import 'package:gestor_horas_extras/navigation/navigations_routers_provider.dart';
 
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends ConsumerWidget {
   static const String name = 'LoginScreen';
   static const String link = '/$name';
 
   const LoginScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       body: SafeArea(
         child: Stack(
           children: [
-            Container(
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage("assets/images/background.jpg" ),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
+            const CustomBackground(),
             Center(
-              child: _buildBody(),
+              child: _buildBody(ref),
             ),
           ],
         ),
@@ -36,7 +31,7 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  _buildBody() {
+  _buildBody(WidgetRef ref) {
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -45,7 +40,7 @@ class LoginScreen extends StatelessWidget {
           _buildFormLogin(),
           _buildOptionPassword(),
           SizedBox(height: PlatformUtils.isAndroid()  ? 10.h : 80.h),
-          _buildButtonLogin(),
+          _buildButtonLogin(ref),
         ],
       ),
     );
@@ -66,6 +61,7 @@ class LoginScreen extends StatelessWidget {
           labelText: "UserName",
           icon: const Icon(Icons.verified_user),
           valueFields: (text) {
+            
             print("User Fields: $text");
           },
         ),
@@ -96,7 +92,7 @@ class LoginScreen extends StatelessWidget {
         child: Text(
           "Olvide mi contraseña",
           style: TextStyle(
-            color:const Color(0xFF1E4B74),
+            color:const Color(ColorConstants.subTextColor),
             fontSize: PlatformUtils.isAndroid()  ? 6.sp : 30.sp
           ),
         ),
@@ -109,20 +105,21 @@ class LoginScreen extends StatelessWidget {
       child: Text(
         "Recuerdame",
         style: TextStyle(
-          color:const Color(0xFF1E4B74),
+          color:const Color(ColorConstants.subTextColor),
            fontSize: PlatformUtils.isAndroid()  ? 6.sp : 30.sp
         ),
       ),
     );
   }
 
-  _buildButtonLogin() {
+  _buildButtonLogin(WidgetRef ref) {
+    final navigation = ref.watch(navigationRoutersProvider);
     return CustomButton(
       buttonName: "Login",
       backgroundColor: const Color(0x001E4B74),
       colorTextButton: Colors.white,
       onTap: () {
-        print("OnTap...");
+        navigation.pushReplacement(HomeScreen.link);
       },
     );
   }
