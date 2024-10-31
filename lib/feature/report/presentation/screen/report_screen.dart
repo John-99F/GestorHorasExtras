@@ -81,7 +81,7 @@ class ReportScreen extends ConsumerWidget {
         ),
         SizedBox(height: 50.h),
         CustomButton(
-            buttonName: "reportar",
+            buttonName: "Reportar",
             backgroundColor: const Color(0x001E4B74),
             colorTextButton: Colors.white,
             onTap: () {})
