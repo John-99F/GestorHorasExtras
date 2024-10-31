@@ -5,6 +5,7 @@ import 'package:gestor_horas_extras/core/enum/home_button_enum.dart';
 import 'package:gestor_horas_extras/core/utils/platform_utils.dart';
 import 'package:gestor_horas_extras/core_ui/widgets/shared/custom_app_bar.dart';
 import 'package:gestor_horas_extras/core_ui/widgets/shared/widgets.dart';
+import 'package:gestor_horas_extras/navigation/navigations_routers_provider.dart';
 
 class HomeScreen extends ConsumerWidget {
   static const String name = "HomeScreen";
@@ -23,7 +24,7 @@ class HomeScreen extends ConsumerWidget {
           children: [
             const CustomBackground(),
             Center(
-              child: _buildBody(),
+              child: _buildBody(ref),
             ),
           ],
         ),
@@ -31,19 +32,20 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 
-  _buildBody() {
+  _buildBody(WidgetRef ref) {
     return SingleChildScrollView(
       child: Column(
         children: [
           const CustomAppBar(),
            SizedBox(height: PlatformUtils.isAndroid() ? 1.h : 35.h),
-          _buildMainMenu(),
+          _buildMainMenu(ref),
         ],
       ),
     );
   }
 
-  _buildMainMenu() {
+  _buildMainMenu(WidgetRef ref) {
+    final navigation = ref.watch(navigationRoutersProvider);
     return Center(
       child: SizedBox(
         height: PlatformUtils.isAndroid() ? 65.h : 900.h,
@@ -55,8 +57,7 @@ class HomeScreen extends ConsumerWidget {
             return CustomCardButton(
               homeButtonEnum: HomeButtonEnum.values.elementAt(index),
               onTap: () {
-                print(
-                    "On Tap in button: ${HomeButtonEnum.values.elementAt(index)}");
+                navigation.pushReplacement(HomeButtonEnum.values.elementAt(index).linkNavigation);
               },
             );
           },
