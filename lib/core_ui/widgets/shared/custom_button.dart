@@ -30,7 +30,7 @@ class CustomButton extends StatelessWidget {
         ),
       ),
       child: SizedBox(
-        width: PlatformUtils.isAndroid()  ? 100.w : 150.w,
+        width: PlatformUtils.isAndroid()  ? 100.w : 200.w,
         height: PlatformUtils.isAndroid()  ? 5.h : 80.h,
         child: Center(
           child: Text(

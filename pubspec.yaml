@@ -57,7 +57,8 @@ dev_dependencies:
   custom_lint: ^0.6.7
   riverpod_lint: ^2.3.13
   platform: ^3.0.0
-
+  #Graficas
+  fl_chart: ^0.69.0
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
