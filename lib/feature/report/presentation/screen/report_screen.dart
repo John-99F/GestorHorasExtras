@@ -30,17 +30,18 @@ class ReportScreen extends ConsumerWidget {
   _buildBody() {
     return SingleChildScrollView(
       child: Column(
-      children: [
-         SizedBox(
-          height: 25.h,
-        ),
-        _buildTitle(),
-        SizedBox(
-          height: 30.h,
-        ),
-        _buildForm(),
-      ],
-    ),);
+        children: [
+          SizedBox(
+            height: 25.h,
+          ),
+          _buildTitle(),
+          SizedBox(
+            height: 30.h,
+          ),
+          _buildForm(),
+        ],
+      ),
+    );
   }
 
   _buildTitle() {
@@ -53,6 +54,7 @@ class ReportScreen extends ConsumerWidget {
   _buildForm() {
     return Column(
       children: [
+        SizedBox(height: 20.h),
         CustomFormFields(
           actionFields: () {},
           labelText: "Fecha:           ",
@@ -84,7 +86,8 @@ class ReportScreen extends ConsumerWidget {
             buttonName: "Reportar",
             backgroundColor: const Color(0x001E4B74),
             colorTextButton: Colors.white,
-            onTap: () {})
+            onTap: () {}),
+        SizedBox(height: 20.h),
       ],
     );
   }

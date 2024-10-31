@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gestor_horas_extras/core/utils/constants.dart';
-import 'package:gestor_horas_extras/core/utils/platform_utils.dart';
 
 class CustomFormFields extends StatelessWidget {
   final VoidCallback actionFields;
