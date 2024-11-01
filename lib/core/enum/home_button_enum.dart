@@ -3,6 +3,7 @@ import 'package:gestor_horas_extras/core/utils/constants.dart';
 import 'package:gestor_horas_extras/core_ui/images/images_constants.dart';
 import 'package:gestor_horas_extras/feature/report/presentation/screen/report_screen.dart';
 import 'package:gestor_horas_extras/feature/statistics/presentation/screen/statistics_screen.dart';
+import 'package:gestor_horas_extras/feature/support/presentation/screen/support_screen.dart';
 
 enum HomeButtonEnum {
   report(
@@ -21,7 +22,7 @@ enum HomeButtonEnum {
     title: Constants.supportTitle,
     pathImage: ImagesConstants.supportIcon,
     userActive: [ProfileEnum.admin, ProfileEnum.dev, ProfileEnum.supervisor],
-    linkNavigation: ReportScreen.link,
+    linkNavigation: SupportScreen.link,
   );
 
   final String title;

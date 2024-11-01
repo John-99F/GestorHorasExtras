@@ -47,7 +47,7 @@ class ReportScreen extends ConsumerWidget {
   _buildTitle() {
     return const Text(
       "Reporte de extras",
-      style: TextStyle(fontSize: 90, color: Colors.blueAccent),
+      style: TextStyle(fontSize: 70, color: Colors.blueAccent),
     );
   }
 
