@@ -2,6 +2,7 @@ import 'package:gestor_horas_extras/feature/auth/login/presentation/screen/login
 import 'package:gestor_horas_extras/feature/principal/presentation/screen/home_screen.dart';
 import 'package:gestor_horas_extras/feature/report/presentation/screen/report_screen.dart';
 import 'package:gestor_horas_extras/feature/statistics/presentation/screen/statistics_screen.dart';
+import 'package:gestor_horas_extras/feature/support/presentation/screen/support_screen.dart';
 import 'package:gestor_horas_extras/navigation/nav_keys.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -34,6 +35,11 @@ GoRouter navigationRouters(NavigationRoutersRef ref) {
         path: StatisticsScreen.link,
         name: StatisticsScreen.name,
         builder: (context, state) => const StatisticsScreen(),
+      ),
+        GoRoute(
+        path: SupportScreen.link,
+        name: SupportScreen.name,
+        builder: (context, state) => const SupportScreen(),
       ),
 
     ],
