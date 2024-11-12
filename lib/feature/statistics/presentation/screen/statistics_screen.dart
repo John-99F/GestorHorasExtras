@@ -2,20 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gestor_horas_extras/core/utils/date_and_hours_utils.dart';
-import 'package:gestor_horas_extras/core/utils/firestore_utils.dart';
+import 'package:gestor_horas_extras/core/utils/excel_utils.dart';
+import 'package:gestor_horas_extras/core/utils/preferences_utils.dart';
 import 'package:gestor_horas_extras/core_ui/widgets/shared/custom_bar_chart.dart';
 import 'package:gestor_horas_extras/core_ui/widgets/shared/custom_pie_chart.dart';
 import 'package:gestor_horas_extras/core_ui/widgets/shared/widgets.dart';
 import 'package:gestor_horas_extras/feature/statistics/domain/params/statistics.dart';
 import 'package:gestor_horas_extras/feature/statistics/presentation/provider/count_hours_provider.dart';
+import 'package:gestor_horas_extras/feature/statistics/presentation/provider/get_all_report_provider.dart';
 import 'package:gestor_horas_extras/feature/statistics/presentation/provider/statistics_day_provider.dart';
 import 'package:gestor_horas_extras/feature/statistics/presentation/provider/statistics_provider.dart';
 
 class StatisticsScreen extends ConsumerWidget {
   static const String name = "StatisticsScreen";
   static const String link = "/$name";
+  final PreferencesUtils _preferencesUtils = PreferencesUtils.instance;
 
-  const StatisticsScreen({super.key});
+  StatisticsScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -58,6 +61,7 @@ class StatisticsScreen extends ConsumerWidget {
     final listStatics = ref.watch(statisticsProvider);
     final listDay = ref.watch(statisticsDaysProvider);
     final ListHourMonth = ref.watch(countHourProvider);
+    final getAllReport = ref.watch(getAllReportProvider);
     return Row(
       children: [
         SizedBox(
@@ -85,7 +89,17 @@ class StatisticsScreen extends ConsumerWidget {
         ),
         Column(
           children: [
-            _buildButton("Generar reporte", () {}),
+            getAllReport.when(data: (data) =>_buildButton("Generar reporte", () async {
+              ExcelUtils.createExcel(
+                  data,
+                  await _preferencesUtils.getUserName(),
+                  await _preferencesUtils.getProject(),
+                  await _preferencesUtils.getResponsible(),
+                  await _preferencesUtils.getImmediateBoss());
+            }),
+                 loading: () => const CircularProgressIndicator(),
+          error: (error, stackTrace) => Text('Error: $error'),
+            ), 
             SizedBox(
               height: 50.h,
             ),
@@ -164,19 +178,21 @@ class StatisticsScreen extends ConsumerWidget {
   }
 
   _buildCardInfo(List<StatisticsParams> listStaticsParams) {
-    return listStaticsParams.isNotEmpty ?  SizedBox(
-      width: 300.w,
-      height: 150.h,
-      child:  Card(
-        color: const Color(0x001E4B74),
-        child: Text(
-          "Cantidad de horas trabajas en este mes(${DateAndHoursUtils.getMonthToString(listStaticsParams[0].month)}): \n ${listStaticsParams[0].countData} horas",
-          style:  const TextStyle(
-            color: Colors.white,
-          ),
-          textAlign: TextAlign.center,
-        ),
-      ),
-    ): const SizedBox();
+    return listStaticsParams.isNotEmpty
+        ? SizedBox(
+            width: 300.w,
+            height: 150.h,
+            child: Card(
+              color: const Color(0x001E4B74),
+              child: Text(
+                "Cantidad de horas trabajas en este mes(${DateAndHoursUtils.getMonthToString(listStaticsParams[0].month)}): \n ${listStaticsParams[0].countData} horas",
+                style: const TextStyle(
+                  color: Colors.white,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          )
+        : const SizedBox();
   }
 }
