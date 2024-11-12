@@ -36,7 +36,7 @@ GoRouter navigationRouters(NavigationRoutersRef ref) {
       GoRoute(
         path: StatisticsScreen.link,
         name: StatisticsScreen.name,
-        builder: (context, state) => const StatisticsScreen(),
+        builder: (context, state) => StatisticsScreen(),
       ),
       GoRoute(
         path: SupportScreen.link,
