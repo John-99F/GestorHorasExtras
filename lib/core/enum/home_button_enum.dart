@@ -2,8 +2,10 @@ import 'package:gestor_horas_extras/core/enum/profile_enum.dart';
 import 'package:gestor_horas_extras/core/utils/constants.dart';
 import 'package:gestor_horas_extras/core_ui/images/images_constants.dart';
 import 'package:gestor_horas_extras/feature/report/presentation/screen/report_screen.dart';
+import 'package:gestor_horas_extras/feature/rules/presentation/screen/rules_screen.dart';
 import 'package:gestor_horas_extras/feature/statistics/presentation/screen/statistics_screen.dart';
 import 'package:gestor_horas_extras/feature/support/presentation/screen/support_screen.dart';
+import 'package:gestor_horas_extras/feature/users/presentation/screen/user_screen.dart';
 
 enum HomeButtonEnum {
   report(
@@ -23,6 +25,18 @@ enum HomeButtonEnum {
     pathImage: ImagesConstants.supportIcon,
     userActive: [ProfileEnum.admin, ProfileEnum.dev, ProfileEnum.supervisor],
     linkNavigation: SupportScreen.link,
+  ),
+  users(
+    title: "Usuarios",
+    pathImage: ImagesConstants.reportIcon,
+    userActive: [ProfileEnum.admin],
+    linkNavigation: UserScreen.link,
+  ),
+  rules(
+    title: "Reglas",
+    pathImage: ImagesConstants.supportIcon,
+    userActive: [ProfileEnum.admin],
+    linkNavigation: RulesScreen.link,
   );
 
   final String title;

@@ -1,8 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:gestor_horas_extras/core/utils/date_and_hours_utils.dart';
+import 'package:gestor_horas_extras/feature/statistics/domain/params/statistics.dart';
 
 class _BarChart extends StatelessWidget {
-  const _BarChart();
+  final List<StatisticsParams> listStaticsParams;
+
+  _BarChart({
+    required this.listStaticsParams,
+  });
+
+  int contador = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -14,9 +23,20 @@ class _BarChart extends StatelessWidget {
         barGroups: barGroups,
         gridData: const FlGridData(show: false),
         alignment: BarChartAlignment.spaceAround,
-        maxY: 40,
+        maxY: _getAllHours(),
       ),
     );
+  }
+
+
+double _getAllHours() {
+  int count = 0; 
+  listStaticsParams.forEach((element) {
+    if (element.countData > count) {
+    count = element.countData;
+    }
+  });
+  return count + 5;
   }
 
   BarTouchData get barTouchData => BarTouchData(
@@ -48,40 +68,21 @@ class _BarChart extends StatelessWidget {
       fontWeight: FontWeight.bold,
       fontSize: 14,
     );
-    String text;
-    switch (value.toInt()) {
-      case 0:
-        text = 'Enero';
-        break;
-      case 1:
-        text = 'Febrero';
-        break;
-      case 2:
-        text = 'Marzo';
-        break;
-      case 3:
-        text = 'Abril';
-        break;
-      case 4:
-        text = 'Mayo';
-        break;
-      case 5:
-        text = 'Junio';
-        break;
-      case 6:
-        text = 'Julio';
-        break;
-       case 7:
-        text = 'Octubre';
-        break;  
-      default:
-        text = '';
-        break;
-    }
+    List<int> listMonth = [];
+
+    listStaticsParams.forEach((value) {
+      listMonth.add(value.month);
+    });
+
+
+    Widget title = Text( listMonth.isNotEmpty ? DateAndHoursUtils.getMonthToString(listMonth[contador]) : "",
+        style: style);
+    contador++;
+
     return SideTitleWidget(
       axisSide: meta.axisSide,
       space: 2,
-      child: Text(text, style: style),
+      child: title,
     );
   }
 
@@ -118,103 +119,46 @@ class _BarChart extends StatelessWidget {
         end: Alignment.topCenter,
       );
 
-  List<BarChartGroupData> get barGroups => [
-        BarChartGroupData(
-          x: 0,
-          barRods: [
-            BarChartRodData(
-              toY: 8,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 1,
-          barRods: [
-            BarChartRodData(
-              toY: 10,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 2,
-          barRods: [
-            BarChartRodData(
-              toY: 18,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 3,
-          barRods: [
-            BarChartRodData(
-              toY: 25,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 4,
-          barRods: [
-            BarChartRodData(
-              toY: 3,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 5,
-          barRods: [
-            BarChartRodData(
-              toY: 10,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 6,
-          barRods: [
-            BarChartRodData(
-              toY: 10,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 7,
-          barRods: [
-            BarChartRodData(
-              toY: 30,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-      ];
+  List<BarChartGroupData> get barGroups => _generateBarGroups();
+
+  List<BarChartGroupData> _generateBarGroups() {
+    return listStaticsParams.asMap().entries.map((statics) {
+      int x = listStaticsParams.indexOf(statics.value);
+      int toY = statics.value.countData;
+
+      return BarChartGroupData(
+        x: x,
+        barRods: [
+          BarChartRodData(
+            toY: toY.toDouble(),
+            gradient: _barsGradient,
+          ),
+        ],
+        showingTooltipIndicators: [0],
+      );
+    }).toList();
+  }
 }
 
 class CustomBarChart extends StatefulWidget {
-  const CustomBarChart({super.key});
+  final List<StatisticsParams> listStaticsParams;
+
+  const CustomBarChart({super.key, required this.listStaticsParams});
 
   @override
   State<StatefulWidget> createState() => CustomBarChartState();
 }
 
 class CustomBarChartState extends State<CustomBarChart> {
+  int contador = 0;
+
   @override
   Widget build(BuildContext context) {
-    return const AspectRatio(
+    return AspectRatio(
       aspectRatio: 1.6,
-      child: _BarChart(),
+      child: _BarChart(
+        listStaticsParams: widget.listStaticsParams,
+      ),
     );
   }
 }

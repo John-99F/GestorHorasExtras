@@ -3,7 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gestor_horas_extras/core_ui/images/images_constants.dart';
 
 class CustomAppBar extends StatelessWidget { 
-  const CustomAppBar({super.key});
+  final VoidCallback actionFunction;
+
+  const CustomAppBar({super.key, required this.actionFunction});
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +22,16 @@ class CustomAppBar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Image.asset(
+          GestureDetector(
+            child: Image.asset(
             ImagesConstants.logoutIcon,
             color: Colors.white,
           ),
+          onTap: () {
+            actionFunction.call();
+          },
+          )
+          
         ],
       ),
     );

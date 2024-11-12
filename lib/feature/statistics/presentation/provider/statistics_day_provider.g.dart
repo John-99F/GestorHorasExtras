@@ -1,25 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'navigations_routers_provider.dart';
+part of 'statistics_day_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$navigationRoutersHash() => r'ad4e06c44c4f1781a1f931b18f97ee1ba949051a';
+String _$statisticsDaysHash() => r'03b69fceb34195f871a0da302530a8632b94a3ac';
 
-/// See also [navigationRouters].
-@ProviderFor(navigationRouters)
-final navigationRoutersProvider = AutoDisposeProvider<GoRouter>.internal(
-  navigationRouters,
-  name: r'navigationRoutersProvider',
+/// See also [statisticsDays].
+@ProviderFor(statisticsDays)
+final statisticsDaysProvider =
+    AutoDisposeFutureProvider<List<StatisticsParams>>.internal(
+  statisticsDays,
+  name: r'statisticsDaysProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$navigationRoutersHash,
+      : _$statisticsDaysHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef NavigationRoutersRef = AutoDisposeProviderRef<GoRouter>;
+typedef StatisticsDaysRef
+    = AutoDisposeFutureProviderRef<List<StatisticsParams>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

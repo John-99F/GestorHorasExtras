@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "515241872246",
+    "project_id": "gestordeextras",
+    "storage_bucket": "gestordeextras.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:515241872246:android:08cbb51ceb2ef394db8857",
+        "android_client_info": {
+          "package_name": "com.example.gestor_horas_extras"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCl-h80EfQtCfAB0-2-qpWXHsf1Ijcb5T8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
