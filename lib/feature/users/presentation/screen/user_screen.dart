@@ -5,16 +5,14 @@ import 'package:gestor_horas_extras/core/utils/firestore_utils.dart';
 import 'package:gestor_horas_extras/core/utils/preferences_utils.dart';
 import 'package:gestor_horas_extras/core_ui/widgets/shared/custom_form_fields.dart';
 import 'package:gestor_horas_extras/core_ui/widgets/shared/widgets.dart';
-import 'package:gestor_horas_extras/feature/report/presentation/provider/report_provider.dart';
 import 'package:gestor_horas_extras/feature/users/presentation/provider/user_provider.dart';
 import 'package:gestor_horas_extras/navigation/navigations_routers_provider.dart';
 
-class ReportScreen extends ConsumerWidget {
-  static const String name = "ReportScreen";
+class UserScreen extends ConsumerWidget {
+  static const String name = "UserScreen";
   static const String link = "/$name";
-  static final PreferencesUtils _preferencesUtils = PreferencesUtils.instance;
 
-  const ReportScreen({super.key});
+  const UserScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -38,7 +36,7 @@ class ReportScreen extends ConsumerWidget {
       child: Column(
         children: [
           SizedBox(
-            height: 25.h,
+            height: 10.h,
           ),
           _buildTitle(),
           SizedBox(
@@ -52,77 +50,97 @@ class ReportScreen extends ConsumerWidget {
 
   _buildTitle() {
     return const Text(
-      "Reporte de extras",
+      "Crear usuarios",
       style: TextStyle(fontSize: 70, color: Colors.blueAccent),
     );
   }
 
   _buildForm(WidgetRef ref) {
-    String fecha = ref.watch(setDateProvider);
-    String horaInicio = ref.watch(setInitHoursProvider);
-    String horaFinal = ref.watch(setLastHoursProvider);
-    String descripcion = ref.watch(setDescriptionProvider);
+    String name = ref.watch(nameUserProvider);
+    String secondName = ref.watch(secondNameUserProvider);
+    String rol = ref.watch(rolUserProvider);
+    String documentNumber = ref.watch(documentNumberProvider);
+    String password = ref.watch(passwordUserProvider);
+    String confirmPassword = ref.watch(passwordConfirmUserProvider);
     return Column(
       children: [
         SizedBox(height: 20.h),
         CustomFormFields(
           actionFields: () {},
-          labelText: "Fecha:           ",
+          labelText: "Cedula:",
           onChanged: (String value) {
-            ref.read(setDateProvider.notifier).setDate(value);
+            ref.read(documentNumberProvider.notifier).setDocumentNumber(value);
           },
-          initValue: "____ /____ /___",
+          spaceTitleField: 30.w,
         ),
         SizedBox(height: 10.h),
         CustomFormFields(
           actionFields: () {},
-          labelText: "Hora inicial:  ",
+          labelText: "Nombre:",
           onChanged: (String value) {
-            ref.read(setInitHoursProvider.notifier).setInitHours(value);
+            ref.read(nameUserProvider.notifier).setNameUser(value);
           },
         ),
         //const CustomDropdown(),
         SizedBox(height: 10.h),
         CustomFormFields(
           actionFields: () {},
-          labelText: "Hora Final:    ",
+          labelText: "Apellido:",
           onChanged: (String value) {
-            ref.read(setLastHoursProvider.notifier).setLastHours(value);
+            ref.read(secondNameUserProvider.notifier).setSecondNameUser(value);
           },
         ),
         SizedBox(height: 10.h),
         CustomFormFields(
           actionFields: () {},
-          labelText: "Descripcion: ",
+          labelText: "contraseña:",
           onChanged: (String value) {
-            ref.read(setDescriptionProvider.notifier).setDescription(value);
+            ref.read(passwordUserProvider.notifier).setPasswordUser(value);
           },
-          maxLines: 5,
+        ),
+        SizedBox(height: 10.h),
+        CustomFormFields(
+          actionFields: () {},
+          labelText: "confirmar\ncontraseña:",
+          onChanged: (String value) {
+            ref
+                .read(passwordConfirmUserProvider.notifier)
+                .setPasswordConfirmUser(value);
+          },
+        ),
+        SizedBox(height: 10.h),
+        CustomFormFields(
+          actionFields: () {},
+          labelText: "rol:",
+          onChanged: (String value) {
+            ref.read(rolUserProvider.notifier).setRolUser(value);
+          },
         ),
         SizedBox(height: 50.h),
         CustomButton(
-            buttonName: "Reportar",
+            buttonName: "Crear",
             backgroundColor: const Color(0x001E4B74),
             colorTextButton: Colors.white,
             onTap: () async {
-              FirestoreUtils.createReport(
-                documentNumber: await _preferencesUtils.getDocumentNumber(),
-                dia: fecha,
-                horaInicio: horaInicio,
-                horaFinal: horaFinal,
-                descripcion: descripcion,
-                jefeInmediato: await _preferencesUtils.getImmediateBoss(),
-                responsable:  await _preferencesUtils.getResponsible(),
-                proyecto:  await _preferencesUtils.getProject(),
-              );
-              resetForm(ref);
+              if (password == confirmPassword) {
+                  FirestoreUtils.createUser(
+                  documentNumber: documentNumber,
+                  name: name,
+                  secondName: secondName,
+                  rol: rol,
+                  password: password
+                );
+                resetForm(ref);
+              } else {
+                print("Contraseñas incorrectas");
+              }
             }),
         SizedBox(height: 20.h),
       ],
     );
   }
 
-    resetForm(WidgetRef ref) {
+  resetForm(WidgetRef ref) {
     final navigation = ref.watch(navigationRoutersProvider);
     navigation
         .pushReplacement(link);

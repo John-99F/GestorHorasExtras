@@ -5,16 +5,16 @@ import 'package:gestor_horas_extras/core/utils/firestore_utils.dart';
 import 'package:gestor_horas_extras/core/utils/preferences_utils.dart';
 import 'package:gestor_horas_extras/core_ui/widgets/shared/custom_form_fields.dart';
 import 'package:gestor_horas_extras/core_ui/widgets/shared/widgets.dart';
-import 'package:gestor_horas_extras/feature/report/presentation/provider/report_provider.dart';
-import 'package:gestor_horas_extras/feature/users/presentation/provider/user_provider.dart';
+import 'package:gestor_horas_extras/feature/rules/presentation/provider/rules_provider.dart';
 import 'package:gestor_horas_extras/navigation/navigations_routers_provider.dart';
 
-class ReportScreen extends ConsumerWidget {
-  static const String name = "ReportScreen";
+class RulesScreen extends ConsumerWidget {
+  static const String name = "RulesScreen";
   static const String link = "/$name";
-  static final PreferencesUtils _preferencesUtils = PreferencesUtils.instance;
 
-  const ReportScreen({super.key});
+  const RulesScreen({super.key});
+
+  static final PreferencesUtils _preferencesUtils = PreferencesUtils.instance;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -38,7 +38,7 @@ class ReportScreen extends ConsumerWidget {
       child: Column(
         children: [
           SizedBox(
-            height: 25.h,
+            height: 10.h,
           ),
           _buildTitle(),
           SizedBox(
@@ -52,68 +52,65 @@ class ReportScreen extends ConsumerWidget {
 
   _buildTitle() {
     return const Text(
-      "Reporte de extras",
+      "Crear reglas",
       style: TextStyle(fontSize: 70, color: Colors.blueAccent),
     );
   }
 
   _buildForm(WidgetRef ref) {
-    String fecha = ref.watch(setDateProvider);
-    String horaInicio = ref.watch(setInitHoursProvider);
-    String horaFinal = ref.watch(setLastHoursProvider);
-    String descripcion = ref.watch(setDescriptionProvider);
+    String responsible = ref.watch(responsibleProvider);
+    String immediateBoss = ref.watch(immediateBossProvider);
+    String project = ref.watch(projectProvider);
+    String description = ref.watch(descriptionProvider);
     return Column(
       children: [
         SizedBox(height: 20.h),
         CustomFormFields(
           actionFields: () {},
-          labelText: "Fecha:           ",
+          labelText: "responsable extras:",
           onChanged: (String value) {
-            ref.read(setDateProvider.notifier).setDate(value);
+            ref.read(responsibleProvider.notifier).setResponsible(value);
           },
-          initValue: "____ /____ /___",
+          spaceTitleField: 30.w,
         ),
         SizedBox(height: 10.h),
         CustomFormFields(
           actionFields: () {},
-          labelText: "Hora inicial:  ",
+          labelText: "jefe inmediato:",
           onChanged: (String value) {
-            ref.read(setInitHoursProvider.notifier).setInitHours(value);
+            ref.read(immediateBossProvider.notifier).setImmediateBoss(value);
           },
         ),
         //const CustomDropdown(),
         SizedBox(height: 10.h),
         CustomFormFields(
           actionFields: () {},
-          labelText: "Hora Final:    ",
+          labelText: "proyecto:",
           onChanged: (String value) {
-            ref.read(setLastHoursProvider.notifier).setLastHours(value);
+            ref.read(projectProvider.notifier).setProject(value);
           },
         ),
         SizedBox(height: 10.h),
         CustomFormFields(
           actionFields: () {},
-          labelText: "Descripcion: ",
+          labelText: "descripcion:",
           onChanged: (String value) {
-            ref.read(setDescriptionProvider.notifier).setDescription(value);
+            ref.read(descriptionProvider.notifier).setDescription(value);
           },
           maxLines: 5,
         ),
         SizedBox(height: 50.h),
         CustomButton(
-            buttonName: "Reportar",
+            buttonName: "Crear reglas",
             backgroundColor: const Color(0x001E4B74),
             colorTextButton: Colors.white,
             onTap: () async {
-              FirestoreUtils.createReport(
+              FirestoreUtils.createRule(
                 documentNumber: await _preferencesUtils.getDocumentNumber(),
-                dia: fecha,
-                horaInicio: horaInicio,
-                horaFinal: horaFinal,
-                descripcion: descripcion,
-                jefeInmediato: await _preferencesUtils.getImmediateBoss(),
-                responsable:  await _preferencesUtils.getResponsible(),
-                proyecto:  await _preferencesUtils.getProject(),
+                responsable: responsible,
+                jefeInmediato: immediateBoss,
+                project: project,
+                descripcion: description,
               );
               resetForm(ref);
             }),
@@ -122,9 +119,8 @@ class ReportScreen extends ConsumerWidget {
     );
   }
 
-    resetForm(WidgetRef ref) {
+  resetForm(WidgetRef ref) {
     final navigation = ref.watch(navigationRoutersProvider);
-    navigation
-        .pushReplacement(link);
+    navigation.pushReplacement(link);
   }
 }
