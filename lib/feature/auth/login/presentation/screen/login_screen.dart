@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gestor_horas_extras/core/enum/dialog_button_enum.dart';
+import 'package:gestor_horas_extras/core/utils/dialog_utils.dart';
 import 'package:gestor_horas_extras/core/utils/firestore_utils.dart';
 import 'package:gestor_horas_extras/core/utils/platform_utils.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gestor_horas_extras/core/utils/preferences_utils.dart';
 import 'package:gestor_horas_extras/core_ui/colors/color_constants.dart';
+import 'package:gestor_horas_extras/core_ui/widgets/shared/custom_dialog.dart';
 import 'package:gestor_horas_extras/core_ui/widgets/shared/widgets.dart';
 import 'package:gestor_horas_extras/feature/auth/login/presentation/provider/login_provider.dart';
 
@@ -13,6 +17,7 @@ import 'package:gestor_horas_extras/navigation/navigations_routers_provider.dart
 class LoginScreen extends ConsumerWidget {
   static const String name = 'LoginScreen';
   static const String link = '/$name';
+  static final PreferencesUtils _preferencesUtils = PreferencesUtils.instance;
 
   const LoginScreen({super.key});
 
@@ -59,7 +64,7 @@ class LoginScreen extends ConsumerWidget {
     return Column(
       children: [
         CustomFields(
-          labelText: "UserName",
+          labelText: "Documento de identidad",
           icon: const Icon(Icons.verified_user),
           valueFields: (text) {
             ref.read(userLoginProvider.notifier).setUserLogin(text);
@@ -71,6 +76,7 @@ class LoginScreen extends ConsumerWidget {
           valueFields: (text) {
             ref.read(passwordLoginProvider.notifier).setPasswordLogin(text);
           },
+          obscureText: true,
         ),
       ],
     );
@@ -122,10 +128,30 @@ class LoginScreen extends ConsumerWidget {
       onTap: () async {
         if (userLogin.isNotEmpty &&
             passwordLogin.isNotEmpty &&
-           await FirestoreUtils.getUser(userLogin, passwordLogin) == true) {
-          navigation.pushReplacement(HomeScreen.link);
+            await FirestoreUtils.getUser(userLogin, passwordLogin) == true) {
+          if (ref.context.mounted) {
+            DialogUtils.confirmOrErrorDialog(
+              ref.context,
+              DialogButtonEnum.withoutButton,
+              Colors.green,
+              "Bienvenido ${await _preferencesUtils.getUserName()} !!!!",
+              "Ahora podras registrar tus horas extras!",
+            );
+          }
+          Future.delayed(const Duration(seconds: 1), () {
+            navigation.pushReplacement(
+              HomeScreen.link,
+            );
+          });
         } else {
-          print("Error usuario o contraseña incorrectos");
+          DialogUtils.confirmOrErrorDialog(
+            ref.context,
+            DialogButtonEnum.oneButton,
+            Colors.red,
+            "Error al ingresar Usuario!!",
+            "Usuario o contraseña incorrectos. volver a intentarlo",
+            firstButtonName: "Aceptar",
+          );
         }
       },
     );

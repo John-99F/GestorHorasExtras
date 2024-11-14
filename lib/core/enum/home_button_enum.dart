@@ -11,37 +11,43 @@ enum HomeButtonEnum {
   report(
     title: Constants.reportTitle,
     pathImage: ImagesConstants.reportIcon,
-    userActive: [ProfileEnum.admin, ProfileEnum.dev, ProfileEnum.supervisor],
+    userActive: [1, 2, 3],
     linkNavigation: ReportScreen.link,
   ),
   statistics(
     title: Constants.statisticsTitle,
     pathImage: ImagesConstants.stadisticIcon,
-    userActive: [ProfileEnum.admin, ProfileEnum.dev, ProfileEnum.supervisor],
+    userActive: [1, 2, 3],
     linkNavigation: StatisticsScreen.link,
+  ),
+  generateAllReport(
+    title: Constants.generateAllReport,
+    pathImage: ImagesConstants.stadisticIcon,
+    userActive: [1,],
+    linkNavigation: "",
   ),
   support(
     title: Constants.supportTitle,
     pathImage: ImagesConstants.supportIcon,
-    userActive: [ProfileEnum.admin, ProfileEnum.dev, ProfileEnum.supervisor],
+    userActive: [1, 2, 3],
     linkNavigation: SupportScreen.link,
   ),
   users(
     title: "Usuarios",
     pathImage: ImagesConstants.reportIcon,
-    userActive: [ProfileEnum.admin],
+    userActive: [1],
     linkNavigation: UserScreen.link,
   ),
   rules(
     title: "Reglas",
     pathImage: ImagesConstants.supportIcon,
-    userActive: [ProfileEnum.admin],
+    userActive: [1],
     linkNavigation: RulesScreen.link,
   );
 
   final String title;
   final String pathImage;
-  final List<ProfileEnum> userActive;
+  final List<int> userActive;
   final String linkNavigation;
 
   const HomeButtonEnum({
