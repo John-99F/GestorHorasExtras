@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gestor_horas_extras/core/enum/dialog_button_enum.dart';
+import 'package:gestor_horas_extras/core/utils/dialog_utils.dart';
 import 'package:gestor_horas_extras/core/utils/firestore_utils.dart';
 import 'package:gestor_horas_extras/core/utils/preferences_utils.dart';
 import 'package:gestor_horas_extras/core_ui/widgets/shared/custom_form_fields.dart';
@@ -65,54 +67,47 @@ class UserScreen extends ConsumerWidget {
     return Column(
       children: [
         SizedBox(height: 20.h),
-        CustomFormFields(
-          actionFields: () {},
-          labelText: "Cedula:",
-          onChanged: (String value) {
+        CustomFields(
+          labelText: "\t\tCedula:",
+          valueFields: (String value) {
             ref.read(documentNumberProvider.notifier).setDocumentNumber(value);
           },
-          spaceTitleField: 30.w,
         ),
         SizedBox(height: 10.h),
-        CustomFormFields(
-          actionFields: () {},
+        CustomFields(
           labelText: "Nombre:",
-          onChanged: (String value) {
+          valueFields: (String value) {
             ref.read(nameUserProvider.notifier).setNameUser(value);
           },
         ),
         //const CustomDropdown(),
         SizedBox(height: 10.h),
-        CustomFormFields(
-          actionFields: () {},
+        CustomFields(
           labelText: "Apellido:",
-          onChanged: (String value) {
+          valueFields: (String value) {
             ref.read(secondNameUserProvider.notifier).setSecondNameUser(value);
           },
         ),
         SizedBox(height: 10.h),
-        CustomFormFields(
-          actionFields: () {},
-          labelText: "contraseña:",
-          onChanged: (String value) {
+        CustomFields(
+          labelText: "Contraseña:",
+          valueFields: (String value) {
             ref.read(passwordUserProvider.notifier).setPasswordUser(value);
           },
         ),
         SizedBox(height: 10.h),
-        CustomFormFields(
-          actionFields: () {},
-          labelText: "confirmar\ncontraseña:",
-          onChanged: (String value) {
+        CustomFields(
+          labelText: "Confirmar contraseña:",
+          valueFields: (String value) {
             ref
                 .read(passwordConfirmUserProvider.notifier)
                 .setPasswordConfirmUser(value);
           },
         ),
         SizedBox(height: 10.h),
-        CustomFormFields(
-          actionFields: () {},
-          labelText: "rol:",
-          onChanged: (String value) {
+        CustomFields(
+          labelText: "Rol:",
+          valueFields: (String value) {
             ref.read(rolUserProvider.notifier).setRolUser(value);
           },
         ),
@@ -122,17 +117,24 @@ class UserScreen extends ConsumerWidget {
             backgroundColor: const Color(0x001E4B74),
             colorTextButton: Colors.white,
             onTap: () async {
-              if (password == confirmPassword) {
-                  FirestoreUtils.createUser(
-                  documentNumber: documentNumber,
-                  name: name,
-                  secondName: secondName,
-                  rol: rol,
-                  password: password
-                );
-                resetForm(ref);
+              if (name.isNotEmpty &&
+                  secondName.isNotEmpty &&
+                  documentNumber.isNotEmpty &&
+                  password.isNotEmpty &&
+                  confirmPassword.isNotEmpty &&
+                  password == confirmPassword) {
+                FirestoreUtils.createUser(
+                    documentNumber: documentNumber,
+                    name: name,
+                    secondName: secondName,
+                    rol: rol,
+                    password: password);
+                DialogUtils.confirmRegisterDialog(ref.context, "Usuario");
+                Future.delayed(const Duration(seconds: 1), () {
+                  resetForm(ref);
+                });
               } else {
-                print("Contraseñas incorrectas");
+                DialogUtils.errorRegisterDialog(ref.context, "Usuario");
               }
             }),
         SizedBox(height: 20.h),
@@ -142,7 +144,12 @@ class UserScreen extends ConsumerWidget {
 
   resetForm(WidgetRef ref) {
     final navigation = ref.watch(navigationRoutersProvider);
-    navigation
-        .pushReplacement(link);
+    ref.read(documentNumberProvider.notifier).setDocumentNumber('');
+    ref.read(nameUserProvider.notifier).setNameUser('');
+    ref.read(secondNameUserProvider.notifier).setSecondNameUser('');
+    ref.read(passwordUserProvider.notifier).setPasswordUser('');
+    ref.read(passwordConfirmUserProvider.notifier).setPasswordConfirmUser('');
+    ref.read(rolUserProvider.notifier).setRolUser('');
+    navigation.pushReplacement(link);
   }
 }

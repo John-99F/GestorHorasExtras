@@ -2,6 +2,7 @@ class Constants {
   static const String reportTitle = "Reportes";
   static const String statisticsTitle = "Estadisticas";
   static const String supportTitle = "Soporte";
+  static const String generateAllReport = "Generar todo el reporte";
   static const String emptyValue = "";
   static const List<String> months = [
     'enero',

@@ -60,6 +60,29 @@ class FirestoreUtils {
     }
   }
 
+  static Future<Map<String, String>> getAllUsers() async {
+    try {
+      QuerySnapshot queryUser = await _users.get();
+
+      if (queryUser.docs.isNotEmpty) {
+        Map<String, String> users = {};
+        queryUser.docs.forEach((user) {
+          Map<String, dynamic> userMap = user.data() as Map<String, dynamic>;
+          users[userMap['cedula']] = "${userMap['nombre']} ${userMap['apellido']}"
+        ;
+        });
+        return users;
+      } else {
+        print(
+            'No se encontró un usuario con la cédula y contraseña especificadas.');
+        return {};
+      }
+    } catch (e) {
+      print("Error al buscar usuarios: $e");
+      return {};
+    }
+  }
+
 // ------------------------------------- CRUD HORAS -------------------------------------
   /// Metodo para crear usuarios por firebase
   static Future<void> createReport({
@@ -132,6 +155,41 @@ class FirestoreUtils {
 
           hoursReport.add(Report(
             cedula: cedula,
+            descripcion: horaMapper["descripcion"],
+            dia: horaMapper["dia"],
+            horaInicio: horaMapper["horaInicio"],
+            horaFinal: horaMapper["horaFinal"],
+            jefeInmediato: horaMapper["jefeInmediato"],
+            proyecto: horaMapper["proyecto"],
+            responsable: horaMapper["responsable"],
+          ));
+        });
+
+        return hoursReport;
+      } else {
+        print(
+            'No se encontró un usuario con la cédula y contraseña especificadas.');
+        return [];
+      }
+    } catch (e) {
+      print("Error al buscar usuarios: $e");
+      return [];
+    }
+  }
+
+  static Future<List<Report>>? getAllReport() async {
+    try {
+      List<Report> hoursReport = [];
+
+      QuerySnapshot queryHours = await _horas.get();
+
+      if (queryHours.docs.isNotEmpty) {
+        queryHours.docs.forEach((horas) {
+          Map<String, dynamic> horaMapper =
+              horas.data() as Map<String, dynamic>;
+
+          hoursReport.add(Report(
+            cedula: horaMapper["cedula_usuario"],
             descripcion: horaMapper["descripcion"],
             dia: horaMapper["dia"],
             horaInicio: horaMapper["horaInicio"],

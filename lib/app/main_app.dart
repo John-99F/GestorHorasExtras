@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gestor_horas_extras/navigation/navigations_routers_provider.dart';
 
 class MainApp extends ConsumerWidget {
-
   const MainApp({
     super.key,
   });

@@ -26,7 +26,7 @@ GoRouter navigationRouters(NavigationRoutersRef ref) {
       GoRoute(
         path: HomeScreen.link,
         name: HomeScreen.name,
-        builder: (context, state) => const HomeScreen(),
+        builder: (context, state) => HomeScreen(),
       ),
       GoRoute(
         path: ReportScreen.link,
@@ -48,7 +48,7 @@ GoRouter navigationRouters(NavigationRoutersRef ref) {
         name: UserScreen.name,
         builder: (context, state) => const UserScreen(),
       ),
-        GoRoute(
+      GoRoute(
         path: RulesScreen.link,
         name: RulesScreen.name,
         builder: (context, state) => const RulesScreen(),

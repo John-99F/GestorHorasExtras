@@ -16,7 +16,7 @@ class DateAndHoursUtils {
 
   /// Metodo para obtener el mes por String.
   static String getMonthToString(int month) {
-    print('mes: ${Constants.months[month]}');
+    print('mes: ${Constants.months[month-1]}');
     return Constants.months[month - 1];
   }
 

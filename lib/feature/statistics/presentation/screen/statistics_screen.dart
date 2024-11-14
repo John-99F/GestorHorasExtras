@@ -103,7 +103,6 @@ class StatisticsScreen extends ConsumerWidget {
             SizedBox(
               height: 50.h,
             ),
-            _buildButton("Visualizar reporte", () {}),
             SizedBox(
               height: 50.h,
             ),
