@@ -12,6 +12,7 @@ class CustomFormFields extends StatelessWidget {
   final bool autocorrect;
   final int maxLines;
   final String initValue;
+  final double? spaceTitleField;
 
   const CustomFormFields({
     super.key,
@@ -24,6 +25,7 @@ class CustomFormFields extends StatelessWidget {
     this.maxLines = 1,
     required this.onChanged,
     this.initValue = Constants.emptyValue,
+    this.spaceTitleField,
   });
 
   @override
@@ -31,16 +33,16 @@ class CustomFormFields extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(width: 300.0),
+       SizedBox(width: 400.w),
         Text(
           labelText,
           style: const TextStyle(
-            fontSize: 25,
+            fontSize: 30,
             fontWeight: FontWeight.w500,
             color: Colors.blueAccent,
           ),
         ),
-        const SizedBox(width: 10.0),
+        SizedBox(width: spaceTitleField ?? 20.0),
         Container(
           decoration: const BoxDecoration(
             borderRadius: BorderRadius.all(
@@ -48,11 +50,12 @@ class CustomFormFields extends StatelessWidget {
                 ),
                  color: Colors.white,
           ),
-          width: 800.w,
+          width: 700.w,
           child: TextFormField(
             cursorColor: Colors.blueAccent,
             maxLines: maxLines,
             initialValue: initValue,
+            style:const TextStyle(fontSize: 25),
             decoration: InputDecoration(
                fillColor: Colors.blueAccent,
                focusColor: Colors.blueAccent,
@@ -62,6 +65,7 @@ class CustomFormFields extends StatelessWidget {
                 borderRadius: BorderRadius.all(
                   Radius.circular(8.0),
                 ),
+              
               ),
             ),
             onChanged: (String value) {

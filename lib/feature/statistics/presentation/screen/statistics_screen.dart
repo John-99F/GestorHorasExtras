@@ -1,15 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gestor_horas_extras/core/utils/date_and_hours_utils.dart';
+import 'package:gestor_horas_extras/core/utils/excel_utils.dart';
+import 'package:gestor_horas_extras/core/utils/preferences_utils.dart';
 import 'package:gestor_horas_extras/core_ui/widgets/shared/custom_bar_chart.dart';
 import 'package:gestor_horas_extras/core_ui/widgets/shared/custom_pie_chart.dart';
 import 'package:gestor_horas_extras/core_ui/widgets/shared/widgets.dart';
+import 'package:gestor_horas_extras/feature/statistics/domain/params/statistics.dart';
+import 'package:gestor_horas_extras/feature/statistics/presentation/provider/count_hours_provider.dart';
+import 'package:gestor_horas_extras/feature/statistics/presentation/provider/get_all_report_provider.dart';
+import 'package:gestor_horas_extras/feature/statistics/presentation/provider/statistics_day_provider.dart';
+import 'package:gestor_horas_extras/feature/statistics/presentation/provider/statistics_provider.dart';
 
 class StatisticsScreen extends ConsumerWidget {
   static const String name = "StatisticsScreen";
   static const String link = "/$name";
+  final PreferencesUtils _preferencesUtils = PreferencesUtils.instance;
 
-  const StatisticsScreen({super.key});
+  StatisticsScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -18,13 +27,13 @@ class StatisticsScreen extends ConsumerWidget {
           child: Stack(
         children: [
           const CustomBackground(),
-          _buildBody(),
+          _buildBody(ref),
         ],
       )),
     );
   }
 
-  _buildBody() {
+  _buildBody(WidgetRef ref) {
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -35,7 +44,7 @@ class StatisticsScreen extends ConsumerWidget {
           SizedBox(
             height: 80.h,
           ),
-          _buildContainerCharts(),
+          _buildContainerCharts(ref),
         ],
       ),
     );
@@ -48,55 +57,113 @@ class StatisticsScreen extends ConsumerWidget {
     );
   }
 
-  _buildContainerCharts() {
+  _buildContainerCharts(WidgetRef ref) {
+    final listStatics = ref.watch(statisticsProvider);
+    final listDay = ref.watch(statisticsDaysProvider);
+    final ListHourMonth = ref.watch(countHourProvider);
+    final getAllReport = ref.watch(getAllReportProvider);
     return Row(
       children: [
         SizedBox(
           width: 200.w,
         ),
-        _buildBarChart(),
+        listStatics.when(
+          data: (data) {
+            return _buildBarChart(data);
+          },
+          loading: () => const CircularProgressIndicator(),
+          error: (error, stackTrace) => Text('Error: $error'),
+        ),
         SizedBox(
           width: 30.w,
         ),
-        _buildPieChart(),
+        listDay.when(
+          data: (data) {
+            return _buildPieChart(data);
+          },
+          loading: () => const CircularProgressIndicator(),
+          error: (error, stackTrace) => Text('Error: $error'),
+        ),
         SizedBox(
           width: 10.w,
         ),
         Column(
           children: [
-            _buildButton("Generar reporte", () {}),
+            getAllReport.when(data: (data) =>_buildButton("Generar reporte", () async {
+              ExcelUtils.createExcel(
+                  data,
+                  await _preferencesUtils.getUserName(),
+                  await _preferencesUtils.getProject(),
+                  await _preferencesUtils.getResponsible(),
+                  await _preferencesUtils.getImmediateBoss());
+            }),
+                 loading: () => const CircularProgressIndicator(),
+          error: (error, stackTrace) => Text('Error: $error'),
+            ), 
             SizedBox(
               height: 50.h,
             ),
-            _buildButton("Visualizar reporte", () {}),
             SizedBox(
               height: 50.h,
             ),
-            _buildCardInfo(),
+            ListHourMonth.when(
+              data: (data) {
+                return _buildCardInfo(data);
+              },
+              loading: () => const CircularProgressIndicator(),
+              error: (error, stackTrace) => Text('Error: $error'),
+            ),
           ],
         )
       ],
     );
   }
 
-  _buildBarChart() {
-    return SizedBox(
-      width: 700.w,
-      height: 500.h,
-      child: const Card(
-        color: Color(0x001E4B74),
-        child: CustomBarChart(),
-      ),
-    );
+  _buildBarChart(List<StatisticsParams> listStaticsParams) {
+    print("Entre aqui");
+    return listStaticsParams.isNotEmpty
+        ? SizedBox(
+            width: 700.w,
+            height: 500.h,
+            child: Card(
+              color: const Color(0x001E4B74),
+              child: CustomBarChart(
+                listStaticsParams: listStaticsParams,
+              ),
+            ),
+          )
+        : _buildEmpty();
   }
 
-  _buildPieChart() {
+  _buildPieChart(List<StatisticsParams> listStaticsParams) {
+    return listStaticsParams.isNotEmpty
+        ? SizedBox(
+            width: 600.w,
+            height: 500.h,
+            child: Card(
+              color: const Color(0x001E4B74),
+              child: CustomPieChart(
+                listStaticsParams: listStaticsParams,
+              ),
+            ),
+          )
+        : _buildEmpty();
+  }
+
+  _buildEmpty() {
     return SizedBox(
       width: 600.w,
       height: 500.h,
       child: const Card(
         color: Color(0x001E4B74),
-        child: CustomPieChart(),
+        child: Center(
+          child: Text(
+            "En estos momentos no tenemos graficas para mostrar\n realiza tu primer reporte ",
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -109,20 +176,22 @@ class StatisticsScreen extends ConsumerWidget {
         onTap: onTap);
   }
 
-  _buildCardInfo() {
-    return SizedBox(
-      width: 300.w,
-      height: 150.h,
-      child: const Card(
-        color: Color(0x001E4B74),
-        child: Text(
-          "Cantidad de horas trabajas en este mes(Octubre): \n 80 horas",
-          style: TextStyle(
-            color: Colors.white,
-          ),
-          textAlign: TextAlign.center,
-        ),
-      ),
-    );
+  _buildCardInfo(List<StatisticsParams> listStaticsParams) {
+    return listStaticsParams.isNotEmpty
+        ? SizedBox(
+            width: 300.w,
+            height: 150.h,
+            child: Card(
+              color: const Color(0x001E4B74),
+              child: Text(
+                "Cantidad de horas trabajas en este mes(${DateAndHoursUtils.getMonthToString(listStaticsParams[0].month)}): \n ${listStaticsParams[0].countData} horas",
+                style: const TextStyle(
+                  color: Colors.white,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          )
+        : const SizedBox();
   }
 }

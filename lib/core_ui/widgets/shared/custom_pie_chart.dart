@@ -1,18 +1,25 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:gestor_horas_extras/core/utils/date_and_hours_utils.dart';
+import 'package:gestor_horas_extras/feature/statistics/domain/params/statistics.dart';
 
 class CustomPieChart extends StatefulWidget {
-  const CustomPieChart({super.key});
+  final List<StatisticsParams> listStaticsParams;
+  const CustomPieChart({super.key, required this.listStaticsParams});
 
   @override
-  State<StatefulWidget> createState() => CustomPieChartState();
+  State<StatefulWidget> createState() =>
+      CustomPieChartState();
 }
 
-class CustomPieChartState extends State {
-  int touchedIndex = -1;
+class CustomPieChartState extends State<CustomPieChart> {
+  final colors = [Colors.blue, Colors.yellow, Colors.purple, Colors.green, Colors.red, Colors.orange, Colors.pink];
 
+  int touchedIndex = -1;
   @override
   Widget build(BuildContext context) {
+    int contador = 0;
+
     return AspectRatio(
       aspectRatio: 1.3,
       child: Row(
@@ -49,38 +56,18 @@ class CustomPieChartState extends State {
               ),
             ),
           ),
-          const Column(
+          Column(
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text(
-                'Lunes',
-                style: TextStyle(color: Colors.blue),
-              ),
-              SizedBox(
-                height: 4,
-              ),
-               Text(
-                'Viernes',
-                style: TextStyle(color: Colors.yellow),
-              ),
-              SizedBox(
-                height: 4,
-              ),
-             Text(
-                'Sabado',
-                style: TextStyle(color: Colors.purple),
-              ),
-              SizedBox(
-                height: 4,
-              ),
-               Text(
-                'Miercoles',
-                style: TextStyle(color: Colors.green),
-              ),
-              SizedBox(
-                height: 18,
-              ),
+              ...getDays().asMap().entries.map((statics) {
+                final color = colors[contador];
+                contador++;
+                return Text(
+                  DateAndHoursUtils.getdayToString(statics.value),
+                  style: TextStyle(color: color),
+                );
+              }),
             ],
           ),
           const SizedBox(
@@ -91,68 +78,38 @@ class CustomPieChartState extends State {
     );
   }
 
+  List<int> getDays() {
+    List<int> listDay = [];
+    if (widget.listStaticsParams.isNotEmpty) {
+      widget.listStaticsParams.forEach((statistics) {
+        listDay.add(statistics.month);
+      });
+
+      return listDay;
+    }
+    return [];
+  }
+
   List<PieChartSectionData> showingSections() {
-    return List.generate(4, (i) {
+    return List.generate(widget.listStaticsParams.length, (i) {
+      final sectionData = widget.listStaticsParams[i];
       final isTouched = i == touchedIndex;
       final fontSize = isTouched ? 25.0 : 16.0;
       final radius = isTouched ? 60.0 : 50.0;
       const shadows = [Shadow(color: Colors.black, blurRadius: 2)];
-      switch (i) {
-        case 0:
-          return PieChartSectionData(
-            color: Colors.blue,
-            value: 40,
-            title: '40%',
-            radius: radius,
-            titleStyle: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              shadows: shadows,
-            ),
-          );
-        case 1:
-          return PieChartSectionData(
-            color: Colors.yellow,
-            value: 30,
-            title: '30%',
-            radius: radius,
-            titleStyle: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              shadows: shadows,
-            ),
-          );
-        case 2:
-          return PieChartSectionData(
-            color: Colors.purple,
-            value: 15,
-            title: '15%',
-            radius: radius,
-            titleStyle: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              shadows: shadows,
-            ),
-          );
-        case 3:
-          return PieChartSectionData(
-            color: Colors.green,
-            value: 15,
-            title: '15%',
-            radius: radius,
-            titleStyle: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              shadows: shadows,
-            ),
-          );
-        default:
-          throw Error();
-      }
+      final color = colors[i];
+     return  PieChartSectionData(
+      color: color,
+      value: sectionData.countData.toDouble(), // Usa el conteo del objeto
+      title: '${sectionData.countData.toInt()} horas', // Convierte el conteo en un título
+      radius: radius,
+      titleStyle: TextStyle(
+        fontSize: fontSize,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+        shadows: shadows,
+      ),
+    );
     });
   }
 }

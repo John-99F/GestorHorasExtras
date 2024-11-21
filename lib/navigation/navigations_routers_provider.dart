@@ -1,8 +1,10 @@
 import 'package:gestor_horas_extras/feature/auth/login/presentation/screen/login_screen.dart';
 import 'package:gestor_horas_extras/feature/principal/presentation/screen/home_screen.dart';
 import 'package:gestor_horas_extras/feature/report/presentation/screen/report_screen.dart';
+import 'package:gestor_horas_extras/feature/rules/presentation/screen/rules_screen.dart';
 import 'package:gestor_horas_extras/feature/statistics/presentation/screen/statistics_screen.dart';
 import 'package:gestor_horas_extras/feature/support/presentation/screen/support_screen.dart';
+import 'package:gestor_horas_extras/feature/users/presentation/screen/user_screen.dart';
 import 'package:gestor_horas_extras/navigation/nav_keys.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -24,24 +26,33 @@ GoRouter navigationRouters(NavigationRoutersRef ref) {
       GoRoute(
         path: HomeScreen.link,
         name: HomeScreen.name,
-        builder: (context, state) => const HomeScreen(),
+        builder: (context, state) => HomeScreen(),
       ),
       GoRoute(
         path: ReportScreen.link,
         name: ReportScreen.name,
         builder: (context, state) => const ReportScreen(),
       ),
-        GoRoute(
+      GoRoute(
         path: StatisticsScreen.link,
         name: StatisticsScreen.name,
-        builder: (context, state) => const StatisticsScreen(),
+        builder: (context, state) => StatisticsScreen(),
       ),
-        GoRoute(
+      GoRoute(
         path: SupportScreen.link,
         name: SupportScreen.name,
         builder: (context, state) => const SupportScreen(),
       ),
-
+      GoRoute(
+        path: UserScreen.link,
+        name: UserScreen.name,
+        builder: (context, state) => const UserScreen(),
+      ),
+      GoRoute(
+        path: RulesScreen.link,
+        name: RulesScreen.name,
+        builder: (context, state) => const RulesScreen(),
+      ),
     ],
   );
 }
